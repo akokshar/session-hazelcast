@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                      http://java.sun.com/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1">
+
+	<display-name>HTTP session powered by Hazelcast</display-name>
+
+<filter>
+    <filter-name>hazelcast-filter</filter-name>
+    <filter-class>com.hazelcast.web.WebFilter</filter-class>
+    <init-param>
+        <param-name>map-name</param-name>
+        <param-value>my-sessions</param-value>
+    </init-param>
+    <init-param>
+        <param-name>cookie-name</param-name>
+        <param-value>hazelcast.sessionId</param-value>
+    </init-param>
+    <!--
+        Domain of session id cookie. Default is based on incoming request.
+        Should cookie only be sent using a secure protocol? Default is false.
+        Should HttpOnly attribute be set on cookie ? Default is false.
+        Are you debugging? Default is false.
+        Do you want to use an existing HazelcastInstance? Default is null.
+        Do you want to connect as a client to an existing cluster? Default is false.
+    -->
+	<init-param>
+		<param-name>use-client</param-name>
+		<param-value>true</param-value>
+	</init-param>
+	<init-param>
+		<param-name>client-config-location</param-name>
+		<param-value>/WEB-INF/hazelcast-client.xml</param-value>
+	</init-param>
+    <!--
+        Client configuration location; Default is null.
+        Do you want to shutdown HazelcastInstance during web application undeploy process? Default is true.
+        deferred-write: Do you want to cache sessions locally in each instance? Default is false.
+    <init-param>
+        <param-name>deferred-write</param-name>
+        <param-value>true</param-value>
+    </init-param>
+    	sticky-session: How is your load-balancer configured? If sticky-session is set to false,
+    	when a session is updated on a node, entry for this session on all other nodes is invalidated.
+    	You have to know your load-balancer configuration before setting this parameter. Default is true.
+    <init-param>
+        <param-name>sticky-session</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    -->
+</filter>
+
+<filter-mapping>
+    <filter-name>hazelcast-filter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>REQUEST</dispatcher>
+</filter-mapping>
+
+<listener>
+    <listener-class>com.hazelcast.web.SessionListener</listener-class>
+</listener>
+
+	<servlet>
+		<servlet-name>sessionServlet</servlet-name>
+		<servlet-class>com.orange.labs.benchmark.session.SessionServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>releaseServlet</servlet-name>
+		<servlet-class>com.orange.labs.benchmark.session.ReleaseServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>sessionServlet</servlet-name>
+		<url-pattern>/ask</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>releaseServlet</servlet-name>
+		<url-pattern>/release</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>/index.html</welcome-file>
+	</welcome-file-list>
+
+	<!-- Session Configuration -->
+	<session-config>
+		<session-timeout>10</session-timeout>
+	</session-config>
+	
+</web-app>
