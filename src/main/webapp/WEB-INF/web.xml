@@ -33,6 +33,10 @@
 		<param-name>client-config-location</param-name>
 		<param-value>/WEB-INF/hazelcast-client.xml</param-value>
 	</init-param>
+	<init-param>
+		<param-name>hazelcast.config</param-name>
+		<param-value>/WEB-INF/hazelcast-client.xml</param-value>
+	</init-param>
     <!--
         Client configuration location; Default is null.
         Do you want to shutdown HazelcastInstance during web application undeploy process? Default is true.
