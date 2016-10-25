@@ -28,8 +28,8 @@
 			<discovery-strategy enabled="true" class="com.noctarius.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy">
 				<properties>
 					<property name="service-name">hazelcast</property>
-					<property name="namespace">cache</property>
-					<property name="service-dns">hazelcast.cache.svc.cluster.local</property>
+					<property name="namespace">hazelcast</property>
+					<property name="service-dns">hazelcast.hazelcast.svc.cluster.local</property>
 				</properties>
 			</discovery-strategy>
 		</discovery-strategies>
